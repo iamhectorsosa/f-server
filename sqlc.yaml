@@ -1,0 +1,12 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    schema: "sql/migrations/001_schema.sql"
+    queries: "sql/queries/queries.sql"
+    gen:
+      go:
+        out: "internal/queries"
+        emit_json_tags: true
+        overrides:
+          - db_type: INTEGER
+            go_type: int

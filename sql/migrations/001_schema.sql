@@ -1,0 +1,22 @@
+-- +goose Up
+CREATE TABLE IF NOT EXISTS players (
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS teams (
+    id INTEGER PRIMARY KEY,
+    player_1 TEXT NOT NULL,
+    player_2 TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    FOREIGN KEY (player_1) REFERENCES players (id) ON DELETE CASCADE,
+    FOREIGN KEY (player_2) REFERENCES players (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS matches (
+    id INTEGER PRIMARY KEY,
+    team_a INTEGER NOT NULL,
+    team_b INTEGER NOT NULL,
+    FOREIGN KEY (team_a) REFERENCES teams (id) ON DELETE CASCADE,
+    FOREIGN KEY (team_b) REFERENCES teams (id) ON DELETE CASCADE
+);
