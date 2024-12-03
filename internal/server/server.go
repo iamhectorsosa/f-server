@@ -23,9 +23,9 @@ func New(store *store.Store, config *config.Config) *Server {
 	mux.HandleFunc("GET /api/health", s.handleHealthGet)
 
 	mux.HandleFunc("GET /api/players", s.handlePlayersGet)
-	mux.HandleFunc("POST /api/players", s.handlePlayersPost)
+	mux.HandleFunc("POST /api/players", s.middlewareProtected(s.handlePlayersPost))
 
-	mux.HandleFunc("POST /api/matches", s.handleMatchesPost)
+	mux.HandleFunc("POST /api/matches", s.middlewareProtected(s.handleMatchesPost))
 
 	var handler http.Handler = mux
 	handler = s.middlewareDevLogger(handler)

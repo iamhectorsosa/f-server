@@ -27,8 +27,9 @@ func main() {
 	// Store and config
 	store := store.New(db)
 	config := &config.Config{
-		Port: os.Getenv("PORT"),
-		Env:  os.Getenv("ENV"),
+		Port:      os.Getenv("PORT"),
+		Env:       os.Getenv("ENV"),
+		AuthToken: os.Getenv("AUTH_TOKEN"),
 	}
 
 	server := server.New(store, config)
