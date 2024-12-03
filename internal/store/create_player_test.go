@@ -4,13 +4,13 @@ import (
 	"context"
 	"testing"
 
+	"github.com/iamhectorsosa/f-server/internal/database"
 	"github.com/iamhectorsosa/f-server/internal/store"
-	"github.com/iamhectorsosa/f-server/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreatePlayer(t *testing.T) {
-	db, cleanup, err := testutils.NewMemoryDB()
+	db, cleanup, err := database.NewInMemory()
 	if err != nil {
 		t.Fatalf("err=%v", err)
 	}
@@ -22,12 +22,12 @@ func TestCreatePlayer(t *testing.T) {
 		Email: "player5@example.com",
 	}
 
-	err = s.CreatePlayer(context.Background(), player)
+	err = s.AddPlayer(context.Background(), player)
 	if err != nil {
 		t.Fatalf("err=%v", err)
 	}
 
-	players, err := s.ReadPlayers(context.Background())
+	players, err := s.GetPlayers(context.Background())
 	if err != nil {
 		t.Fatalf("err=%v", err)
 	}

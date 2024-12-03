@@ -4,13 +4,13 @@ import (
 	"context"
 	"testing"
 
+	"github.com/iamhectorsosa/f-server/internal/database"
 	"github.com/iamhectorsosa/f-server/internal/store"
-	"github.com/iamhectorsosa/f-server/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateMatch(t *testing.T) {
-	db, cleanup, err := testutils.NewMemoryDB()
+func TestAddMatch(t *testing.T) {
+	db, cleanup, err := database.NewInMemory()
 	if err != nil {
 		t.Fatalf("err=%v", err)
 	}
@@ -18,32 +18,24 @@ func TestCreateMatch(t *testing.T) {
 	s := store.New(db)
 
 	newMatch := store.NewMatch{
-		TeamA: struct {
-			Player1 string `json:"player_1"`
-			Player2 string `json:"player_2"`
-			Score   int    `json:"score"`
-		}{
+		TeamA: store.NewTeam{
 			Player1: "player1",
 			Player2: "player2",
 			Score:   1,
 		},
-		TeamB: struct {
-			Player1 string `json:"player_1"`
-			Player2 string `json:"player_2"`
-			Score   int    `json:"score"`
-		}{
+		TeamB: store.NewTeam{
 			Player1: "player3",
 			Player2: "player4",
 			Score:   1,
 		},
 	}
 
-	err = s.CreateMatch(context.Background(), newMatch)
+	err = s.AddMatch(context.Background(), newMatch)
 	if err != nil {
 		t.Fatalf("err=%v", err)
 	}
 
-	players, err := s.ReadPlayers(context.Background())
+	players, err := s.GetPlayers(context.Background())
 
 	if err != nil {
 		t.Fatalf("err=%v", err)

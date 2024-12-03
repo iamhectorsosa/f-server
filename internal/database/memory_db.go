@@ -2,20 +2,23 @@ package database
 
 import (
 	"database/sql"
-	"io/fs"
+	"embed"
 
 	"github.com/pressly/goose/v3"
 	_ "github.com/tursodatabase/go-libsql"
 )
 
-func NewInMemory(migrations fs.FS) (db *sql.DB, cleanup func() error, err error) {
+//go:embed sql/migrations/*.sql
+var embedMigrations embed.FS
+
+func NewInMemory() (db *sql.DB, cleanup func() error, err error) {
 	db, err = sql.Open("libsql", ":memory:")
 	if err != nil {
 		return nil, nil, err
 	}
 	cleanup = db.Close
 
-	goose.SetBaseFS(migrations)
+	goose.SetBaseFS(embedMigrations)
 
 	if err := goose.SetDialect("turso"); err != nil {
 		return nil, cleanup, err

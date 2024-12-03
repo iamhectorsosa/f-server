@@ -9,46 +9,46 @@ import (
 	"context"
 )
 
-const createMatch = `-- name: CreateMatch :exec
+const addMatch = `-- name: AddMatch :exec
 INSERT INTO matches (team_a, team_b) VALUES (?, ?)
 `
 
-type CreateMatchParams struct {
+type AddMatchParams struct {
 	TeamA int `json:"team_a"`
 	TeamB int `json:"team_b"`
 }
 
-func (q *Queries) CreateMatch(ctx context.Context, arg CreateMatchParams) error {
-	_, err := q.db.ExecContext(ctx, createMatch, arg.TeamA, arg.TeamB)
+func (q *Queries) AddMatch(ctx context.Context, arg AddMatchParams) error {
+	_, err := q.db.ExecContext(ctx, addMatch, arg.TeamA, arg.TeamB)
 	return err
 }
 
-const createPlayer = `-- name: CreatePlayer :exec
+const addPlayer = `-- name: AddPlayer :exec
 INSERT INTO players (id, email) VALUES (?, ?)
 `
 
-type CreatePlayerParams struct {
+type AddPlayerParams struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
 }
 
-func (q *Queries) CreatePlayer(ctx context.Context, arg CreatePlayerParams) error {
-	_, err := q.db.ExecContext(ctx, createPlayer, arg.ID, arg.Email)
+func (q *Queries) AddPlayer(ctx context.Context, arg AddPlayerParams) error {
+	_, err := q.db.ExecContext(ctx, addPlayer, arg.ID, arg.Email)
 	return err
 }
 
-const createTeam = `-- name: CreateTeam :one
+const addTeam = `-- name: AddTeam :one
 INSERT INTO teams (player_1, player_2, score) VALUES (?, ?, ?) RETURNING id, player_1, player_2, score
 `
 
-type CreateTeamParams struct {
+type AddTeamParams struct {
 	Player1 string `json:"player_1"`
 	Player2 string `json:"player_2"`
 	Score   int    `json:"score"`
 }
 
-func (q *Queries) CreateTeam(ctx context.Context, arg CreateTeamParams) (Team, error) {
-	row := q.db.QueryRowContext(ctx, createTeam, arg.Player1, arg.Player2, arg.Score)
+func (q *Queries) AddTeam(ctx context.Context, arg AddTeamParams) (Team, error) {
+	row := q.db.QueryRowContext(ctx, addTeam, arg.Player1, arg.Player2, arg.Score)
 	var i Team
 	err := row.Scan(
 		&i.ID,
@@ -59,11 +59,11 @@ func (q *Queries) CreateTeam(ctx context.Context, arg CreateTeamParams) (Team, e
 	return i, err
 }
 
-const readPlayers = `-- name: ReadPlayers :many
+const getPlayers = `-- name: GetPlayers :many
 SELECT
     p.id,
     p.email,
-    CAST(COALESCE(SUM(t.score), 0) AS INTEGER) AS score
+    CAST(SUM(COALESCE(t.score, 0)) AS INTEGER) AS score
 FROM players AS p
 LEFT JOIN teams AS t
     ON p.id IN (t.player_1, t.player_2)
@@ -71,21 +71,21 @@ GROUP BY p.id
 ORDER BY score DESC
 `
 
-type ReadPlayersRow struct {
+type GetPlayersRow struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
 	Score int64  `json:"score"`
 }
 
-func (q *Queries) ReadPlayers(ctx context.Context) ([]ReadPlayersRow, error) {
-	rows, err := q.db.QueryContext(ctx, readPlayers)
+func (q *Queries) GetPlayers(ctx context.Context) ([]GetPlayersRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPlayers)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ReadPlayersRow
+	var items []GetPlayersRow
 	for rows.Next() {
-		var i ReadPlayersRow
+		var i GetPlayersRow
 		if err := rows.Scan(&i.ID, &i.Email, &i.Score); err != nil {
 			return nil, err
 		}

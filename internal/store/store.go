@@ -4,8 +4,11 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/iamhectorsosa/f-server/internal/queries"
+	"github.com/go-playground/validator/v10"
+	"github.com/iamhectorsosa/f-server/internal/database/queries"
 )
+
+var validate = validator.New()
 
 type Store struct {
 	db      *sql.DB

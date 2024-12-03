@@ -3,6 +3,9 @@ default: dev
 format:
 	@go fmt ./...
 
+test:
+	@go test ./...
+
 dev/server:
 	go run github.com/air-verse/air@latest \
 	--build.cmd "go build -o tmp/main" \

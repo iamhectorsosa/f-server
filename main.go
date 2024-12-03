@@ -1,7 +1,6 @@
 package main
 
 import (
-	"embed"
 	"log"
 	"os"
 
@@ -12,22 +11,21 @@ import (
 	"github.com/joho/godotenv"
 )
 
-//go:embed sql/migrations/*.sql
-var embedMigrations embed.FS
-
 func main() {
+	// Loading ENV vars
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("err=%v", err)
 	}
 
-	db, cleanup, err := database.NewInMemory(embedMigrations)
+	// Database connection
+	db, cleanup, err := database.NewInMemory()
 	if err != nil {
 		log.Fatalf("err=%v", err)
 	}
 	defer cleanup()
 
+	// Store and config
 	store := store.New(db)
-
 	config := &config.Config{
 		Port: os.Getenv("PORT"),
 		Env:  os.Getenv("ENV"),

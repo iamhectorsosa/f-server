@@ -4,20 +4,20 @@ import (
 	"context"
 	"testing"
 
+	"github.com/iamhectorsosa/f-server/internal/database"
 	"github.com/iamhectorsosa/f-server/internal/store"
-	"github.com/iamhectorsosa/f-server/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReadPlayers(t *testing.T) {
-	db, cleanup, err := testutils.NewMemoryDB()
+	db, cleanup, err := database.NewInMemory()
 	if err != nil {
 		t.Fatalf("err=%v", err)
 	}
 	defer cleanup()
 	s := store.New(db)
 
-	players, err := s.ReadPlayers(context.Background())
+	players, err := s.GetPlayers(context.Background())
 
 	if err != nil {
 		t.Fatalf("err=%v", err)

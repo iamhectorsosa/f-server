@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Server) handlePlayersGet(w http.ResponseWriter, r *http.Request) {
-	players, err := s.store.ReadPlayers(r.Context())
+	players, err := s.store.GetPlayers(r.Context())
 	if err != nil {
 		encode(w, http.StatusInternalServerError, struct {
 			Error string `json:"error"`
@@ -31,7 +31,7 @@ func (s *Server) handlePlayersPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := s.store.CreatePlayer(r.Context(), *res); err != nil {
+	if err := s.store.AddPlayer(r.Context(), *res); err != nil {
 		encode(w, http.StatusInternalServerError, struct {
 			Error string `json:"error"`
 		}{

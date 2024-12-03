@@ -17,7 +17,7 @@ func (s *Server) handleMatchesPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := s.store.CreateMatch(r.Context(), *res); err != nil {
+	if err := s.store.AddMatch(r.Context(), *res); err != nil {
 		encode(w, http.StatusInternalServerError, struct {
 			Error string `json:"error"`
 		}{
