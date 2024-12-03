@@ -8,6 +8,7 @@ This is a test repository to model an HTTP Server (using `stdlib`) in Go using t
 ├── Makefile                 # commands and live-reload server
 ├── config                   # env vars
 ├── internal
+│   ├── auth                 # authentication utils
 │   ├── database             # database connections and inits
 │   │   ├── queries          # sqlc-generated files
 │   │   └── sql
