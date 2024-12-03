@@ -30,5 +30,7 @@ This is a test repository to model an HTTP Server (using `stdlib`) in Go using t
 - [ ] Improve Store error handling
 - [ ] Integrate a logger into the Server
 - [ ] Integrate business logic to improve metrics on matches
-- [ ] Optimize SQL schema and/or queries with redesign or indexes
+- [ ] Optimize SQL schema and/or queries with redesign or indexesa
+- [ ] Add an integration test to the Server
+- [ ] Add github workflow to check tests, staticcheck, gosec
 - [ ] Add Docker
